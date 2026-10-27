@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Identidad tomada de la presentación de patrocinios 2027 */
+@theme {
+  --color-punto: #f94441;
+  --color-punto-oscuro: #c9302a;
+  --color-trazo: #f5a524;
+  --color-crema: #faf6f0;
+  --color-papel: #fffdfa;
+  --color-arena: #e9e1d6;
+  --color-tinta: #1e1c1c;
+  --color-gris: #5a5552;
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter-tight);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-crema);
+  color: var(--color-tinta);
+}
+
+::selection {
+  background: var(--color-punto);
+  color: var(--color-papel);
+}
+
+@utility contenedor {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+
+@utility eyebrow {
+  @apply text-xs font-semibold tracking-[0.18em] text-punto uppercase;
+}
+
+@utility titulo {
+  @apply font-display text-4xl leading-[1.02] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl;
+}
+
+@utility boton {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-punto;
+}
+
+@utility boton-primario {
+  @apply boton bg-punto text-papel hover:bg-punto-oscuro;
+}
+
+@utility boton-secundario {
+  @apply boton border border-tinta/20 text-tinta hover:border-tinta hover:bg-papel;
+}
+
+@utility campo {
+  @apply w-full rounded-xl border border-tinta/15 bg-papel px-4 py-3 text-base text-tinta placeholder:text-gris/60 focus:border-punto focus:ring-2 focus:ring-punto/20 focus:outline-none;
+}

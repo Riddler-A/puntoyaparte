@@ -21,7 +21,7 @@ Pregunta rectora: *¿Estamos construyendo una empresa que solo genera riqueza, o
 | Texto | `#1E1C1C` · secundario `#5A5552` |
 | Tipografía | Inter Tight (títulos) · Inter (texto) |
 
-Activos en [`assets/`](../assets): logo, punto rojo y fotos de ponentes.
+Activos en [`src/assets/`](../src/assets): logo, punto rojo y fotos de ponentes.
 
 ## Arquitectura: dos landings + cuenta de asistente
 
