@@ -1,10 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { boletos, edicion, maximoPorCompra, regimenesFiscales, type Boleto } from "@/lib/evento";
+import {
+  boletos,
+  contacto,
+  edicion,
+  maximoPorCompra,
+  ponentes,
+  regimenesFiscales,
+  venta,
+  type Boleto,
+} from "@/lib/evento";
 
 // Prototipo de compra: el pago es simulado hasta conectar el proveedor (Stripe).
+// Decisiones de persuasión: ancla de precio (fase siguiente), prueba social, escasez real,
+// pago fraccionado (MSI) y lenguaje de pertenencia ("tus lugares").
 
 type Paso = "boletos" | "datos" | "pago" | "listo";
 type Cantidades = Record<string, number>;
@@ -31,6 +43,32 @@ function lugaresDe(cantidades: Cantidades) {
   return boletos.reduce((suma, b) => suma + b.lugares * (cantidades[b.id] ?? 0), 0);
 }
 
+// Lo que se ahorra frente al precio de la siguiente fase.
+function ahorroDe(cantidades: Cantidades) {
+  return boletos.reduce(
+    (suma, b) => suma + ((b.precioSiguiente ?? b.precio) - b.precio) * (cantidades[b.id] ?? 0),
+    0,
+  );
+}
+
+// Tiempo restante hasta una fecha; null hasta montar en el cliente.
+function useFaltan(fecha: string) {
+  const [faltan, setFaltan] = useState<{ dias: number; horas: number } | null>(null);
+  useEffect(() => {
+    const calcular = () => {
+      const ms = Math.max(0, new Date(fecha).getTime() - Date.now());
+      setFaltan({ dias: Math.floor(ms / 86_400_000), horas: Math.floor((ms % 86_400_000) / 3_600_000) });
+    };
+    const inicio = setTimeout(calcular, 0);
+    const reloj = setInterval(calcular, 60_000);
+    return () => {
+      clearTimeout(inicio);
+      clearInterval(reloj);
+    };
+  }, [fecha]);
+  return faltan;
+}
+
 export function Compra() {
   const [paso, setPaso] = useState<Paso>("boletos");
   const [cantidades, setCantidades] = useState<Cantidades>({});
@@ -42,6 +80,7 @@ export function Compra() {
 
   const total = totalDe(cantidades);
   const lugares = lugaresDe(cantidades);
+  const ahorro = ahorroDe(cantidades);
   const apartado = paso === "datos" || paso === "pago";
 
   useEffect(() => {
@@ -82,16 +121,17 @@ export function Compra() {
   }
 
   return (
-    <div className="contenedor py-10 sm:py-14">
+    <div className="contenedor py-8 sm:py-12">
+      {paso === "boletos" && <EncabezadoEvento />}
       <Pasos actual={paso} />
 
       {apartado && (
         <p role="timer" className="mt-6 rounded-xl bg-trazo/15 px-4 py-3 text-sm">
-          Apartamos tus boletos por{" "}
+          Tus lugares están apartados por{" "}
           <strong className="tabular-nums">
             {Math.floor(restante / 60)}:{String(restante % 60).padStart(2, "0")}
           </strong>
-          . Termina tu compra antes de que se liberen.
+          . Después se liberan para alguien más.
         </p>
       )}
       {expirado && paso === "boletos" && (
@@ -121,15 +161,16 @@ export function Compra() {
           <Resumen
             cantidades={cantidades}
             total={total}
+            ahorro={ahorro}
             accion={
               paso === "boletos" ? (
                 <button
                   type="button"
                   disabled={lugares === 0}
                   onClick={() => irA("datos")}
-                  className="boton-primario w-full disabled:cursor-not-allowed disabled:opacity-40"
+                  className="boton-primario w-full py-4 text-base disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Continuar
+                  Asegurar mis lugares →
                 </button>
               ) : null
             }
@@ -146,6 +187,7 @@ export function Compra() {
                 {lugares === 0 ? "Elige tus boletos" : `${lugares} ${lugares === 1 ? "lugar" : "lugares"} en tu orden`}
               </p>
               <p className="font-display text-xl font-bold tabular-nums">{pesos(total)}</p>
+              {ahorro > 0 && <p className="text-xs font-semibold text-punto">Ahorras {pesos(ahorro)}</p>}
             </div>
             <button
               type="button"
@@ -153,7 +195,7 @@ export function Compra() {
               onClick={() => irA("datos")}
               className="boton-primario disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Continuar
+              Asegurar lugares →
             </button>
           </div>
         </div>
@@ -188,6 +230,72 @@ function Pasos({ actual }: { actual: Paso }) {
   );
 }
 
+function EncabezadoEvento() {
+  const faltan = useFaltan(venta.finFase);
+  return (
+    <section className="relative mb-10 overflow-hidden rounded-3xl bg-tinta p-6 text-papel sm:p-10">
+      <span
+        aria-hidden
+        className="absolute -top-20 -right-20 size-36 rounded-full bg-punto sm:-top-24 sm:-right-24 sm:size-80"
+      />
+      <div className="relative">
+        <p className="eyebrow text-trazo">
+          {edicion.fechasLargas} · {edicion.ciudad}
+        </p>
+        <h1 className="mt-4 max-w-xl font-display text-3xl leading-tight font-bold sm:text-5xl">
+          Haz tu pausa en Punto y Aparte {edicion.anio}
+          <span className="text-punto">.</span>
+        </h1>
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+          <div className="flex -space-x-3">
+            {ponentes.map((p) => (
+              <Image
+                key={p.nombre}
+                src={p.foto}
+                alt={p.nombre}
+                className="size-11 rounded-full object-cover ring-2 ring-tinta"
+                sizes="44px"
+              />
+            ))}
+          </div>
+          <p className="text-sm text-papel/70">
+            <strong className="text-papel">3 voces</strong> sobre empresa, prosperidad y humanidad
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-6 border-t border-papel/15 pt-6 sm:grid-cols-2">
+          <div>
+            <p className="text-sm">
+              <strong className="font-display text-2xl">{venta.confirmados}</strong>{" "}
+              <span className="text-papel/70">dueños y directivos ya tienen su lugar</span>
+            </p>
+          </div>
+          <div>
+            <div className="flex justify-between text-xs text-papel/70">
+              <span>
+                {venta.fase} · {venta.porcentajeVendido}% vendido
+              </span>
+              <span className="tabular-nums" aria-live="off">
+                {faltan ? `Termina en ${faltan.dias} d ${faltan.horas} h` : `Hasta el ${venta.finFaseTexto}`}
+              </span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-papel/15">
+              <div className="h-full rounded-full bg-punto" style={{ width: `${venta.porcentajeVendido}%` }} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const confianza = [
+  { titulo: "Pago seguro", texto: "Procesado por el proveedor; nunca vemos tu tarjeta." },
+  { titulo: "Factura CFDI", texto: "Deducible para tu empresa, a tu correo." },
+  { titulo: "Meses sin intereses", texto: "Hasta 6 MSI con tarjetas participantes." },
+  { titulo: "Transferible", texto: "¿No puedes ir? Cambia el nombre del pase." },
+];
+
 function SeleccionBoletos({
   cantidades,
   lugares,
@@ -200,7 +308,7 @@ function SeleccionBoletos({
   return (
     <section aria-labelledby="titulo-boletos">
       <h2 id="titulo-boletos" className="font-display text-3xl font-bold">
-        Elige tus boletos
+        Elige tus lugares
       </h2>
       <p className="mt-2 text-sm text-gris">
         Precios en pesos mexicanos, con IVA y cargo por servicio incluidos. Máximo {maximoPorCompra} lugares por compra.
@@ -212,15 +320,37 @@ function SeleccionBoletos({
           return (
             <li
               key={b.id}
-              className={`rounded-3xl p-6 ring-1 transition-colors ${
-                b.agotado ? "bg-arena/40 ring-tinta/5" : cantidad > 0 ? "bg-papel ring-2 ring-punto" : "bg-papel ring-tinta/10"
-              }`}
+              className={`relative rounded-3xl p-6 transition-colors ${
+                b.agotado
+                  ? "bg-arena/40 ring-1 ring-tinta/5"
+                  : cantidad > 0 || b.destacado
+                    ? "bg-papel ring-2 ring-punto"
+                    : "bg-papel ring-1 ring-tinta/10"
+              } ${b.destacado ? "mt-7 shadow-lg shadow-punto/10" : ""}`}
             >
+              {b.destacado && (
+                <span className="absolute -top-3 left-6 rounded-full bg-punto px-3 py-1 text-xs font-semibold text-papel">
+                  {b.destacado}
+                </span>
+              )}
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className={b.agotado ? "opacity-50" : undefined}>
                   <p className="text-xs font-semibold tracking-[0.14em] text-gris uppercase">{b.descripcion}</p>
                   <h3 className="mt-1 font-display text-2xl font-bold">{b.nombre}</h3>
-                  <p className="mt-1 font-display text-xl font-semibold tabular-nums">{pesos(b.precio)}</p>
+                  <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                    <span className={`font-display text-xl font-semibold tabular-nums ${b.agotado ? "line-through" : ""}`}>
+                      {pesos(b.precio)}
+                    </span>
+                    {b.precioSiguiente && !b.agotado && (
+                      <span className="text-sm text-gris">
+                        sube a <span className="tabular-nums line-through">{pesos(b.precioSiguiente)}</span> el{" "}
+                        {venta.finFaseTexto}
+                      </span>
+                    )}
+                  </p>
+                  {!b.agotado && b.precio >= 1000 && (
+                    <p className="mt-1 text-xs text-gris">o 3 MSI de {pesos(Math.ceil(b.precio / 3))}</p>
+                  )}
                 </div>
                 {b.agotado ? (
                   <span className="rounded-full bg-tinta/10 px-3 py-1 text-xs font-semibold text-gris">Agotado</span>
@@ -258,13 +388,42 @@ function SeleccionBoletos({
                   </li>
                 ))}
               </ul>
-              {b.quedan !== undefined && !b.agotado && (
-                <p className="mt-3 text-sm font-semibold text-punto">Quedan {b.quedan}</p>
+              {(b.nota || (b.quedan !== undefined && !b.agotado)) && (
+                <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                  {b.quedan !== undefined && !b.agotado && (
+                    <span className="font-semibold text-punto">Solo quedan {b.quedan}</span>
+                  )}
+                  {b.nota && <span className={b.agotado ? "text-gris" : "font-medium text-tinta"}>{b.nota}</span>}
+                </p>
               )}
             </li>
           );
         })}
       </ul>
+
+      <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+        {confianza.map((c) => (
+          <li key={c.titulo} className="flex gap-3">
+            <span aria-hidden className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-tinta text-[10px] text-papel">
+              ✓
+            </span>
+            <span className="text-sm">
+              <strong className="block">{c.titulo}</strong>
+              <span className="text-gris">{c.texto}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <figure className="mt-10 rounded-3xl bg-arena/50 p-6 sm:p-8">
+        <blockquote className="font-display text-xl leading-snug font-medium sm:text-2xl">
+          “{venta.testimonio.texto}”
+        </blockquote>
+        <figcaption className="mt-4 text-sm text-gris">
+          <strong className="text-tinta">{venta.testimonio.autor}</strong> · {venta.testimonio.cargo}
+        </figcaption>
+      </figure>
+
       <p className="mt-6 text-sm text-gris">
         El Día 2 (cata de café) es por invitación.{" "}
         <Link href="/2027#solicitud" className="font-semibold text-tinta underline underline-offset-4">
@@ -277,11 +436,21 @@ function SeleccionBoletos({
   );
 }
 
-function Resumen({ cantidades, total, accion }: { cantidades: Cantidades; total: number; accion: ReactNode }) {
+function Resumen({
+  cantidades,
+  total,
+  ahorro,
+  accion,
+}: {
+  cantidades: Cantidades;
+  total: number;
+  ahorro: number;
+  accion: ReactNode;
+}) {
   const elegidos = boletos.filter((b) => (cantidades[b.id] ?? 0) > 0);
   return (
     <aside className={`rounded-3xl bg-tinta p-6 text-papel lg:sticky lg:top-24 ${accion ? "hidden lg:block" : ""}`}>
-      <p className="eyebrow">Tu orden</p>
+      <p className="eyebrow">Tus lugares</p>
       <p className="mt-3 font-display text-lg font-bold">Punto y Aparte {edicion.anio}</p>
       <p className="text-sm text-papel/60">
         {edicion.fechasLargas} · {edicion.ciudad}
@@ -302,7 +471,21 @@ function Resumen({ cantidades, total, accion }: { cantidades: Cantidades; total:
         <span className="font-display text-3xl font-bold tabular-nums">{pesos(total)}</span>
       </div>
       <p className="mt-1 text-right text-xs text-papel/50">IVA y cargo por servicio incluidos</p>
+      {ahorro > 0 && (
+        <p className="mt-4 rounded-xl bg-punto/20 px-4 py-2.5 text-sm">
+          Ahorras <strong className="tabular-nums">{pesos(ahorro)}</strong> frente al precio después del{" "}
+          {venta.finFaseTexto}.
+        </p>
+      )}
+      {total >= 1000 && (
+        <p className="mt-3 text-sm text-papel/70">
+          o hasta 6 MSI de <strong className="text-papel tabular-nums">{pesos(Math.ceil(total / 6))}</strong>
+        </p>
+      )}
       {accion && <div className="mt-6">{accion}</div>}
+      {accion && (
+        <p className="mt-3 text-center text-xs text-papel/50">Tus lugares quedan apartados 10 minutos al continuar.</p>
+      )}
     </aside>
   );
 }
@@ -418,7 +601,7 @@ function FormularioDatos({
           ← Cambiar boletos
         </button>
         <button type="submit" className="boton-primario">
-          Continuar al pago
+          Continuar al pago →
         </button>
       </div>
     </form>
@@ -509,9 +692,20 @@ function Pago({ total, pagar, volver }: { total: number; pagar: () => void; volv
           ← Volver
         </button>
         <button type="button" onClick={confirmar} disabled={procesando} className="boton-primario disabled:opacity-60">
-          {procesando ? "Procesando…" : metodo === "tarjeta" ? `Pagar ${pesos(total)}` : "Generar referencia de pago"}
+          {procesando
+            ? "Procesando…"
+            : metodo === "tarjeta"
+              ? `Confirmar mis lugares · ${pesos(total)}`
+              : "Generar referencia de pago"}
         </button>
       </div>
+      <p className="mt-4 text-center text-xs text-gris sm:text-right">
+        ¿Dudas antes de pagar? Escríbenos por{" "}
+        <a href={contacto.whatsapp} className="font-semibold text-tinta underline underline-offset-2">
+          WhatsApp
+        </a>
+        .
+      </p>
       <p className="mt-4 text-xs text-gris">Prototipo: el pago es simulado y no se hace ningún cargo.</p>
     </section>
   );
@@ -533,9 +727,27 @@ function Confirmacion({ folio, cantidades, datos }: { folio: string; cantidades:
           Enviamos tus boletos a <strong className="text-papel">{datos.email}</strong>
           {datos.factura === "on" && " junto con tu factura"}. También los encuentras en tu cuenta.
         </p>
+        <p className="mt-4 max-w-xl text-papel/70">
+          Ya eres parte de los {venta.confirmados + pases.length} dueños y directivos que harán su pausa este año.
+        </p>
         <p className="mt-6 text-sm text-papel/50">
           Folio <span className="font-semibold text-papel tabular-nums">{folio}</span>
         </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <a href={enlaceCalendario} target="_blank" rel="noreferrer" className="boton-primario">
+            Agregar a mi calendario
+          </a>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `Voy a Punto y Aparte ${edicion.anio} (${edicion.fechasLargas}, ${edicion.ciudad}). ¿Te animas? https://puntoy-aparte.netlify.app/2027`,
+            )}`}
+            target="_blank"
+            rel="noreferrer"
+            className="boton border border-papel/30 text-papel hover:border-papel"
+          >
+            Invita a un colega
+          </a>
+        </div>
       </div>
 
       <h3 className="mt-12 font-display text-2xl font-bold">Tus pases ({pases.length})</h3>
@@ -561,6 +773,14 @@ function Confirmacion({ folio, cantidades, datos }: { folio: string; cantidades:
     </section>
   );
 }
+
+// TODO: horario provisional (9:00 a 18:00, hora de Guadalajara).
+const enlaceCalendario = `https://calendar.google.com/calendar/render?${new URLSearchParams({
+  action: "TEMPLATE",
+  text: `Punto y Aparte ${edicion.anio}`,
+  dates: "20270217T150000Z/20270218T000000Z",
+  location: edicion.ciudad,
+})}`;
 
 // Cuadrícula decorativa con forma de QR; el código real se genera al emitir el boleto.
 function QrMuestra({ semilla }: { semilla: string }) {

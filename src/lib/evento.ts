@@ -213,9 +213,14 @@ export type Boleto = {
   lugares: number;
   agotado?: boolean;
   quedan?: number;
+  // Precio de la siguiente fase: ancla el precio actual como oportunidad.
+  precioSiguiente?: number;
+  destacado?: string;
+  nota?: string;
 };
 
-// TODO: nombres, precios y cupos provisionales para el prototipo de compra.
+// TODO: nombres, precios, cupos y cifras de venta provisionales para el prototipo de compra.
+// Antes de publicar, cada cifra de escasez o prueba social debe salir de las ventas reales (Profeco).
 export const boletos: Boleto[] = [
   {
     id: "preventa",
@@ -225,6 +230,7 @@ export const boletos: Boleto[] = [
     precio: 1950,
     lugares: 1,
     agotado: true,
+    nota: "Se agotó en 9 días",
   },
   {
     id: "general",
@@ -232,27 +238,46 @@ export const boletos: Boleto[] = [
     descripcion: "Día 1 · Voces",
     incluye: ["Las tres conferencias", "Networking y cierre"],
     precio: 2450,
+    precioSiguiente: 2950,
     lugares: 1,
   },
   {
     id: "preferente",
     nombre: "Preferente",
     descripcion: "Día 1 · Voces",
-    incluye: ["Primeras filas", "Encuentros 1 a 1 en el cierre", "Kit de bienvenida"],
+    incluye: ["Primeras filas", "Encuentros 1 a 1 con ponentes", "Kit de bienvenida"],
     precio: 3450,
+    precioSiguiente: 3950,
     lugares: 1,
     quedan: 15,
+    destacado: "El más elegido",
   },
   {
     id: "mesa",
     nombre: "Mesa empresarial",
     descripcion: "4 lugares · Día 1",
-    incluye: ["Mesa reservada para tu equipo", "Mención en pantalla", "Una factura por la mesa"],
+    incluye: ["Mesa reservada para tu equipo", "Mención en pantalla", "Una sola factura"],
     precio: 8800,
+    precioSiguiente: 10800,
     lugares: 4,
     quedan: 6,
+    nota: "$2,200 por persona · ahorras $1,000 frente a 4 boletos General",
   },
 ];
+
+// TODO: cifras provisionales; deben conectarse a las ventas reales.
+export const venta = {
+  fase: "Fase 2",
+  finFase: "2027-01-15T23:59:00-06:00",
+  finFaseTexto: "15 de enero",
+  porcentajeVendido: 72,
+  confirmados: 86,
+  testimonio: {
+    texto: "Salí con tres conversaciones que cambiaron cómo dirijo a mi equipo. Volvería sin pensarlo.",
+    autor: "Nombre del asistente",
+    cargo: "Director general · Empresa",
+  },
+};
 
 // Máximo de lugares por compra (no de boletos: una mesa ocupa 4).
 export const maximoPorCompra = 8;
