@@ -24,8 +24,11 @@ export const contacto = {
   instagramUsuario: "@___Puntoyaparte",
 };
 
-export const preguntaCentral =
-  "¿Estamos construyendo una empresa que solo genera riqueza, o una que también deja algo valioso a su paso?";
+// Partida en dos para dar peso tipográfico a la segunda mitad.
+export const preguntaCentral = {
+  planteamiento: "¿Estamos construyendo una empresa que solo genera riqueza,",
+  remate: "o una que también deja algo valioso a su paso",
+};
 
 export const pilares = [
   {
@@ -198,6 +201,68 @@ export const beneficios: {
       { beneficio: "Descuento en la próxima edición", valores: [true, true, true] },
     ],
   },
+];
+
+export type Boleto = {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  incluye: string[];
+  precio: number;
+  // Lugares que ocupa cada unidad (una mesa empresarial cuenta como 4).
+  lugares: number;
+  agotado?: boolean;
+  quedan?: number;
+};
+
+// TODO: nombres, precios y cupos provisionales para el prototipo de compra.
+export const boletos: Boleto[] = [
+  {
+    id: "preventa",
+    nombre: "Preventa",
+    descripcion: "Día 1 · Voces",
+    incluye: ["Las tres conferencias", "Networking y cierre"],
+    precio: 1950,
+    lugares: 1,
+    agotado: true,
+  },
+  {
+    id: "general",
+    nombre: "General",
+    descripcion: "Día 1 · Voces",
+    incluye: ["Las tres conferencias", "Networking y cierre"],
+    precio: 2450,
+    lugares: 1,
+  },
+  {
+    id: "preferente",
+    nombre: "Preferente",
+    descripcion: "Día 1 · Voces",
+    incluye: ["Primeras filas", "Encuentros 1 a 1 en el cierre", "Kit de bienvenida"],
+    precio: 3450,
+    lugares: 1,
+    quedan: 15,
+  },
+  {
+    id: "mesa",
+    nombre: "Mesa empresarial",
+    descripcion: "4 lugares · Día 1",
+    incluye: ["Mesa reservada para tu equipo", "Mención en pantalla", "Una factura por la mesa"],
+    precio: 8800,
+    lugares: 4,
+    quedan: 6,
+  },
+];
+
+// Máximo de lugares por compra (no de boletos: una mesa ocupa 4).
+export const maximoPorCompra = 8;
+
+export const regimenesFiscales = [
+  "601 · General de Ley Personas Morales",
+  "612 · Personas Físicas con Actividades Empresariales",
+  "626 · Régimen Simplificado de Confianza",
+  "605 · Sueldos y Salarios",
+  "Otro",
 ];
 
 export const opcionesTamanoEmpresa = [
