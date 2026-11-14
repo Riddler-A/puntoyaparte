@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
-import { Encabezado } from "@/components/encabezado";
-import { Pie } from "@/components/pie";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,11 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${inter.variable} ${interTight.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col font-sans">
-        <Encabezado />
-        <main className="flex-1">{children}</main>
-        <Pie />
-      </body>
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

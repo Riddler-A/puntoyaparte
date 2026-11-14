@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { edicion } from "@/lib/evento";
+import { invitadoPorSlug } from "@/lib/invitados";
 import { supabaseServidor } from "@/lib/supabase";
 
 export type EstadoFormulario = {
@@ -38,6 +39,15 @@ const esquemaPatrocinio = z.object({
   puesto: texto(2, "Escribe tu puesto."),
   paquete: z.enum(["encuadre", "palindroma", "capicua", "sin-definir"], { error: "Elige un paquete." }),
   mensaje: opcional,
+  acepta_privacidad: aceptaPrivacidad,
+});
+
+const esquemaInvitacion = z.object({
+  invitado: z.string(),
+  nombre: texto(2, "Escribe tu nombre."),
+  email: z.email("Revisa tu correo."),
+  telefono: z.string().trim().regex(/^[\d\s+()-]{10,20}$/, "Un número de 10 dígitos."),
+  giro: texto(2, "Cuéntanos a qué se dedica tu empresa."),
   acepta_privacidad: aceptaPrivacidad,
 });
 
@@ -96,6 +106,39 @@ export async function solicitarLugar(_previo: EstadoFormulario, formData: FormDa
     ok: true,
     mensaje: `Gracias, ${datos.nombre}. Revisaremos tu perfil y te escribiremos a ${datos.email} para confirmar tu lugar.`,
   };
+}
+
+export async function aceptarInvitacion(_previo: EstadoFormulario, formData: FormData): Promise<EstadoFormulario> {
+  const valores = valoresDe(formData);
+  const resultado = esquemaInvitacion.safeParse(valores);
+  if (!resultado.success) {
+    return {
+      ok: false,
+      mensaje: "Revisa los datos marcados.",
+      errores: z.flattenError(resultado.error).fieldErrors,
+      valores,
+    };
+  }
+
+  const { acepta_privacidad: _acepta, invitado: slug, ...datos } = resultado.data;
+  const invitado = invitadoPorSlug(slug);
+  if (!invitado) return { ok: false, mensaje: "Esta invitación ya no es válida.", valores };
+
+  const { error } = await guardar("invitaciones_aceptadas", {
+    ...datos,
+    email: datos.email.toLowerCase(),
+    invitado_slug: invitado.slug,
+    invita_por: invitado.invitaPor,
+    edicion: edicion.anio,
+  });
+
+  // Si ya aceptó con este correo, se trata como éxito: no hay nada que corregir.
+  if (error && error.code !== "23505") {
+    console.error("aceptarInvitacion", error);
+    return { ok: false, mensaje: "No pudimos registrar tu respuesta. Intenta de nuevo en unos minutos.", valores };
+  }
+
+  return { ok: true, mensaje: datos.email };
 }
 
 export async function solicitarPropuesta(_previo: EstadoFormulario, formData: FormData): Promise<EstadoFormulario> {

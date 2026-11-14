@@ -7,6 +7,7 @@ import {
   boletos,
   contacto,
   edicion,
+  enlaceCalendario,
   maximoPorCompra,
   ponentes,
   regimenesFiscales,
@@ -773,14 +774,6 @@ function Confirmacion({ folio, cantidades, datos }: { folio: string; cantidades:
     </section>
   );
 }
-
-// TODO: horario provisional (9:00 a 18:00, hora de Guadalajara).
-const enlaceCalendario = `https://calendar.google.com/calendar/render?${new URLSearchParams({
-  action: "TEMPLATE",
-  text: `Punto y Aparte ${edicion.anio}`,
-  dates: "20270217T150000Z/20270218T000000Z",
-  location: edicion.ciudad,
-})}`;
 
 // Cuadrícula decorativa con forma de QR; el código real se genera al emitir el boleto.
 function QrMuestra({ semilla }: { semilla: string }) {

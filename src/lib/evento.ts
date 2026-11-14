@@ -14,6 +14,14 @@ export const edicion = {
   fechasCortas: "17–18 feb 2027",
 };
 
+// TODO: horario provisional (9:00 a 18:00, hora de Guadalajara).
+export const enlaceCalendario = `https://calendar.google.com/calendar/render?${new URLSearchParams({
+  action: "TEMPLATE",
+  text: `Punto y Aparte ${edicion.anio}`,
+  dates: "20270217T150000Z/20270218T000000Z",
+  location: edicion.ciudad,
+})}`;
+
 export const contacto = {
   nombre: "Víctor Hernández",
   cargo: "Comercialización",
