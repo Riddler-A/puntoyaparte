@@ -15,7 +15,8 @@ export default function Privacidad() {
       <div className="mt-8 space-y-4 text-lg text-gris">
         <p>
           Estamos preparando el aviso de privacidad integral de Punto y Aparte. Los datos que compartes en nuestros
-          formularios se usan únicamente para revisar tu solicitud y contactarte sobre el evento.
+          formularios y en tu compra se usan únicamente para gestionar tu lugar, emitir tu factura y contactarte sobre el
+          evento. No los compartimos con patrocinadores.
         </p>
         <p>
           Si tienes dudas o quieres ejercer tus derechos sobre tus datos, escríbenos a{" "}

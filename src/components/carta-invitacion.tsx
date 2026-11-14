@@ -102,9 +102,7 @@ function Carta({ invitado, aceptar }: { invitado: Invitado; aceptar: () => void 
         </p>
         <p>
           Punto y Aparte reúne a 100 dueños y directivos en {edicion.ciudad} alrededor de una pregunta:{" "}
-          <em>
-            ¿estamos construyendo empresas que solo generan riqueza, o que también dejan algo valioso a su paso?
-          </em>
+          <em>¿qué va a quedar de nuestras empresas cuando ya no estemos en la oficina?</em>
         </p>
         <p>
           Hablamos de <strong className="text-tinta">capitalismo consciente</strong>: negocios rentables que cuidan a

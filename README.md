@@ -10,7 +10,8 @@ Sitio web de Punto y Aparte: conversaciones sobre empresa, prosperidad y humanid
 | Ruta | Para quién | Acción |
 |---|---|---|
 | `/` | Todos | Bifurca a asistentes o patrocinadores |
-| `/2027` | Dueños y directivos | Solicitud de lugar perfilada |
+| `/2027` | Dueños y directivos | Información de la edición, donativo y CTA a boletos |
+| `/2027/boletos` | Dueños y directivos | Compra de boletos (prototipo de pago) y política de reembolsos |
 | `/patrocina` | Marcas | Solicitud de propuesta |
 | `/privacidad` | Todos | Aviso de privacidad (en preparación) |
 

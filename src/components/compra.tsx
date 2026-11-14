@@ -8,7 +8,10 @@ import {
   contacto,
   edicion,
   enlaceCalendario,
+  donativo,
   maximoPorCompra,
+  mesesSinIntereses,
+  politicaReembolso,
   ponentes,
   regimenesFiscales,
   sitioUrl,
@@ -17,8 +20,9 @@ import {
 } from "@/lib/evento";
 
 // Prototipo de compra: el pago es simulado hasta conectar el proveedor (Stripe).
-// Decisiones de persuasión: ancla de precio (fase siguiente), prueba social, escasez real,
-// pago fraccionado (MSI) y lenguaje de pertenencia ("tus lugares").
+// Decisiones de persuasión: ancla de precio (fecha real de cambio), transparencia del donativo,
+// reembolso claro, pago fraccionado (MSI) y lenguaje de pertenencia ("tus lugares").
+// Sin escasez ni testimonios de muestra: solo cifras reales.
 
 type Paso = "boletos" | "datos" | "pago" | "listo";
 type Cantidades = Record<string, number>;
@@ -180,6 +184,8 @@ export function Compra() {
         </div>
       )}
 
+      {paso !== "listo" && <Reembolsos />}
+
       {/* Barra fija en móvil mientras se eligen boletos */}
       {paso === "boletos" && (
         <div className="fixed inset-x-0 bottom-0 z-20 border-t border-tinta/10 bg-papel/95 backdrop-blur lg:hidden">
@@ -203,6 +209,33 @@ export function Compra() {
         </div>
       )}
     </div>
+  );
+}
+
+function Reembolsos() {
+  return (
+    <section id="reembolsos" aria-labelledby="titulo-reembolsos" className="mt-16 scroll-mt-24 border-t border-tinta/10 pt-12">
+      <p className="eyebrow">Condiciones de compra</p>
+      <h2 id="titulo-reembolsos" className="mt-3 font-display text-3xl font-bold">
+        Política de reembolsos y transferencias
+      </h2>
+      <ul className="mt-8 grid gap-6 sm:grid-cols-2">
+        {politicaReembolso.map((r) => (
+          <li key={r.titulo} className="rounded-3xl bg-papel p-6 ring-1 ring-tinta/10">
+            <p className="font-semibold">{r.titulo}</p>
+            <p className="mt-2 text-sm text-gris">{r.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-sm text-gris">
+        Contacto: <a href={`mailto:${contacto.email}`} className="font-semibold text-tinta underline underline-offset-2">{contacto.email}</a>{" "}
+        ·{" "}
+        <a href={contacto.whatsapp} className="font-semibold text-tinta underline underline-offset-2">
+          WhatsApp {contacto.telefono}
+        </a>
+      </p>
+      <div aria-hidden className="h-20 lg:hidden" />
+    </section>
   );
 }
 
@@ -266,25 +299,16 @@ function EncabezadoEvento() {
         </div>
 
         <div className="mt-8 grid gap-6 border-t border-papel/15 pt-6 sm:grid-cols-2">
-          <div>
-            <p className="text-sm">
-              <strong className="font-display text-2xl">{venta.confirmados}</strong>{" "}
-              <span className="text-papel/70">dueños y directivos ya tienen su lugar</span>
-            </p>
-          </div>
-          <div>
-            <div className="flex justify-between text-xs text-papel/70">
-              <span>
-                {venta.fase} · {venta.porcentajeVendido}% vendido
-              </span>
-              <span className="tabular-nums" aria-live="off">
-                {faltan ? `Termina en ${faltan.dias} d ${faltan.horas} h` : `Hasta el ${venta.finFaseTexto}`}
-              </span>
-            </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-papel/15">
-              <div className="h-full rounded-full bg-punto" style={{ width: `${venta.porcentajeVendido}%` }} />
-            </div>
-          </div>
+          <p className="text-sm text-papel/70">
+            <strong className="font-display text-2xl text-papel">100 lugares</strong> para dueños y directivos de
+            Jalisco. Una sala de pares, sin escenario de ventas.
+          </p>
+          <p className="text-sm text-papel/70">
+            <strong className="block text-papel">Precio actual hasta el {venta.finFaseTexto}</strong>
+            <span className="tabular-nums" aria-live="off">
+              {faltan ? `Cambia en ${faltan.dias} d ${faltan.horas} h` : "Después sube a su precio regular."}
+            </span>
+          </p>
         </div>
       </div>
     </section>
@@ -294,8 +318,8 @@ function EncabezadoEvento() {
 const confianza = [
   { titulo: "Pago seguro", texto: "Procesado por el proveedor; nunca vemos tu tarjeta." },
   { titulo: "Factura CFDI", texto: "Deducible para tu empresa, a tu correo." },
-  { titulo: "Meses sin intereses", texto: "Hasta 6 MSI con tarjetas participantes." },
-  { titulo: "Transferible", texto: "¿No puedes ir? Cambia el nombre del pase." },
+  { titulo: "Meses sin intereses", texto: `${mesesSinIntereses} MSI con tarjetas participantes.` },
+  { titulo: "Reembolso claro", texto: "100% hasta el 17 de enero; después, tu pase es transferible." },
 ];
 
 function SeleccionBoletos({
@@ -351,7 +375,9 @@ function SeleccionBoletos({
                     )}
                   </p>
                   {!b.agotado && b.precio >= 1000 && (
-                    <p className="mt-1 text-xs text-gris">o 3 MSI de {pesos(Math.ceil(b.precio / 3))}</p>
+                    <p className="mt-1 text-xs text-gris">
+                      o {mesesSinIntereses} MSI de {pesos(Math.ceil(b.precio / mesesSinIntereses))}
+                    </p>
                   )}
                 </div>
                 {b.agotado ? (
@@ -417,23 +443,20 @@ function SeleccionBoletos({
         ))}
       </ul>
 
-      <figure className="mt-10 rounded-3xl bg-arena/50 p-6 sm:p-8">
-        <blockquote className="font-display text-xl leading-snug font-medium sm:text-2xl">
-          “{venta.testimonio.texto}”
-        </blockquote>
-        <figcaption className="mt-4 text-sm text-gris">
-          <strong className="text-tinta">{venta.testimonio.autor}</strong> · {venta.testimonio.cargo}
-        </figcaption>
-      </figure>
+      <div className="mt-10 rounded-3xl bg-arena/50 p-6 sm:p-8">
+        <p className="eyebrow">A dónde va lo que se aporta</p>
+        <p className="mt-3 font-display text-xl leading-snug font-bold sm:text-2xl">{donativo.titulo}</p>
+        <p className="mt-3 text-sm text-gris">
+          {donativo.boleto}{" "}
+          <Link href="/2027#donativo" className="font-semibold text-tinta underline underline-offset-4">
+            Cómo funciona
+          </Link>
+        </p>
+      </div>
 
       <p className="mt-6 text-sm text-gris">
-        El Día 2 (cata de café) es por invitación.{" "}
-        <Link href="/2027#solicitud" className="font-semibold text-tinta underline underline-offset-4">
-          Solicita tu lugar
-        </Link>
+        El Día 2 (cata de café) es por invitación: la extendemos a cerca de 30 participantes con boleto.
       </p>
-      {/* Espacio para que la barra fija móvil no tape el contenido */}
-      <div aria-hidden className="h-20 lg:hidden" />
     </section>
   );
 }
@@ -481,7 +504,8 @@ function Resumen({
       )}
       {total >= 1000 && (
         <p className="mt-3 text-sm text-papel/70">
-          o hasta 6 MSI de <strong className="text-papel tabular-nums">{pesos(Math.ceil(total / 6))}</strong>
+          o {mesesSinIntereses} MSI de{" "}
+          <strong className="text-papel tabular-nums">{pesos(Math.ceil(total / mesesSinIntereses))}</strong>
         </p>
       )}
       {accion && <div className="mt-6">{accion}</div>}
@@ -588,7 +612,11 @@ function FormularioDatos({
           <label className="flex items-start gap-3 text-sm text-gris">
             <input type="checkbox" name="acepta" defaultChecked={datos.acepta === "on"} className="mt-0.5 size-4 accent-punto" />
             <span>
-              Acepto los términos de compra, la política de reembolsos y el{" "}
+              Acepto los términos de compra, la{" "}
+              <a href="#reembolsos" className="underline underline-offset-2 hover:text-tinta">
+                política de reembolsos
+              </a>{" "}
+              y el{" "}
               <Link href="/privacidad" className="underline underline-offset-2 hover:text-tinta">
                 aviso de privacidad
               </Link>
@@ -670,8 +698,9 @@ function Pago({ total, pagar, volver }: { total: number; pagar: () => void; volv
             </label>
             <select id="meses" value={meses} onChange={(e) => setMeses(e.target.value)} className="campo">
               <option value="1">Una sola exhibición · {pesos(total)}</option>
-              <option value="3">3 meses sin intereses · {pesos(Math.ceil(total / 3))} al mes</option>
-              <option value="6">6 meses sin intereses · {pesos(Math.ceil(total / 6))} al mes</option>
+              <option value={String(mesesSinIntereses)}>
+                {mesesSinIntereses} meses sin intereses · {pesos(Math.ceil(total / mesesSinIntereses))} al mes
+              </option>
             </select>
           </>
         )}
@@ -730,7 +759,7 @@ function Confirmacion({ folio, cantidades, datos }: { folio: string; cantidades:
           {datos.factura === "on" && " junto con tu factura"}. También los encuentras en tu cuenta.
         </p>
         <p className="mt-4 max-w-xl text-papel/70">
-          Ya eres parte de los {venta.confirmados + pases.length} dueños y directivos que harán su pausa este año.
+          Una semana antes te escribiremos por WhatsApp con la sede, el horario y una pregunta para los ponentes.
         </p>
         <p className="mt-6 text-sm text-papel/50">
           Folio <span className="font-semibold text-papel tabular-nums">{folio}</span>

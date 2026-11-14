@@ -17,8 +17,8 @@ export function Encabezado() {
           <Link href="/patrocina" className="hidden rounded-full px-3 py-2 hover:bg-arena/60 sm:block">
             Patrocina
           </Link>
-          <Link href={`/${edicion.anio}#solicitud`} className="boton-primario px-4 py-2">
-            Solicita tu lugar
+          <Link href={`/${edicion.anio}/boletos`} className="boton-primario px-4 py-2">
+            Aparta tu lugar
           </Link>
         </nav>
       </div>

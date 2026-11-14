@@ -20,6 +20,9 @@ export function Pilares() {
           <p className="font-display text-sm font-bold text-punto">{p.numero}</p>
           <h3 className="mt-8 font-display text-2xl font-bold">{p.nombre}</h3>
           <p className="mt-3 text-sm leading-relaxed text-gris">{p.texto}</p>
+          <p className="mt-5 border-t border-tinta/10 pt-4 text-xs text-gris">
+            <span className="font-semibold text-tinta">Se mide en:</span> {p.indicador}
+          </p>
         </article>
       ))}
     </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { FormularioPropuesta } from "@/components/formularios";
 import { Punto, TituloSeccion, Voces } from "@/components/secciones";
-import { beneficios, contacto, edicion, paquetes, perfilAsistente } from "@/lib/evento";
+import { beneficios, contacto, donativo, edicion, paquetes, perfilAsistente } from "@/lib/evento";
 
 export const metadata: Metadata = {
   title: "Patrocina",
@@ -19,14 +19,14 @@ const razones = [
   },
   {
     titulo: "Una marca con propósito",
-    texto: "El 50% de tu aportación impulsa la filantropía a través de AFP.",
+    texto: "El 50% de tu aportación se entrega a organizaciones de Jalisco elegidas con AFP, con reporte público.",
   },
 ];
 
 const momentos = [
   { momento: "Antes", texto: "Logo en registro, 8 mailings a +4,000 contactos, artes, pauta con alcance de +90,000 y tráiler." },
   { momento: "Durante", texto: "Cintillos por conferencia, fondo de prensa, menciones en escenario y pitch como patrocinador oficial." },
-  { momento: "Después", texto: "Posteo de cierre, reporte final y descuento para la próxima edición." },
+  { momento: "Después", texto: "Posteo de cierre, reporte de impacto en abril y descuento para la próxima edición." },
 ];
 
 function Celda({ valor }: { valor: string | boolean }) {
@@ -202,17 +202,29 @@ export default function Patrocina() {
       <section id="impacto" className="relative overflow-hidden">
         <div className="contenedor grid gap-12 py-24 lg:grid-cols-2 lg:items-center">
           <div>
-            <TituloSeccion eyebrow="Tu inversión deja huella" titulo="El 50% de cada patrocinio impulsa una causa.">
-              Se destina a AFP (Association of Fundraising Professionals), que profesionaliza la procuración de fondos
-              para que más causas sociales consigan recursos. Cada patrocinador recibe un reporte final después del
-              evento.
+            <TituloSeccion eyebrow="Tu inversión deja huella" titulo={donativo.titulo}>
+              {donativo.texto}
             </TituloSeccion>
+            <ol className="mt-8 space-y-4">
+              {donativo.pasos.map((p, i) => (
+                <li key={p.titulo} className="flex gap-4 border-t border-tinta/10 pt-4">
+                  <span className="font-display text-sm font-bold text-punto">0{i + 1}</span>
+                  <span>
+                    <strong className="block">{p.titulo}</strong>
+                    <span className="text-sm text-gris">{p.texto}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-sm text-gris">
+              Los datos de los asistentes no se comparten con las marcas: tú los conoces en la sala y en la cata.
+            </p>
           </div>
           <div className="relative mx-auto flex aspect-square w-full max-w-sm items-center justify-center">
             <span aria-hidden className="absolute inset-0 rounded-full bg-punto" />
             <p className="relative text-center text-papel">
               <span className="block font-display text-8xl font-bold">50%</span>
-              <span className="text-lg">para la causa</span>
+              <span className="text-lg">para organizaciones de Jalisco</span>
             </p>
           </div>
         </div>

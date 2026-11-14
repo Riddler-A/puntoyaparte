@@ -31,36 +31,43 @@ export const contacto = {
   telefono: "33 1738 0678",
   whatsapp: "https://wa.me/523317380678",
   email: "comercializacion.vh@gmail.com",
-  instagram: "https://www.instagram.com/___puntoyaparte",
-  instagramUsuario: "@___Puntoyaparte",
+  instagram: "https://www.instagram.com/____puntoyaparte",
+  instagramUsuario: "@____puntoyaparte",
 };
 
 // Partida en dos para dar peso tipográfico a la segunda mitad.
+// Tono de legado: "solo riqueza" se leía como reproche para este público.
 export const preguntaCentral = {
-  planteamiento: "¿Estamos construyendo una empresa que solo genera riqueza,",
-  remate: "o una que también deja algo valioso a su paso",
+  planteamiento: "Ya construiste algo sólido.",
+  remate: "¿Qué va a quedar cuando no estés en la oficina",
 };
+
+export const lema = "Una pausa para pensar qué empresa vas a heredar";
 
 export const pilares = [
   {
     numero: "01",
     nombre: "Rentabilidad",
     texto: "Empresas financieramente sólidas, capaces de innovar, competir y crecer a largo plazo.",
+    indicador: "Margen operativo y años de operación",
   },
   {
     numero: "02",
     nombre: "Personas",
     texto: "Liderazgos que desarrollan talento y saben que el bienestar del equipo llega a sus familias.",
+    indicador: "Rotación voluntaria al año",
   },
   {
     numero: "03",
     nombre: "Ética",
-    texto: "Decisiones coherentes y transparentes, sin cambiar principios por resultados inmediatos.",
+    texto: "Decisiones que podrías explicarles a tus hijos, sin cambiar principios por resultados inmediatos.",
+    indicador: "Compromisos públicos cumplidos",
   },
   {
     numero: "04",
     nombre: "Trascendencia",
     texto: "Organizaciones que dejan huella en su comunidad y usan sus recursos con responsabilidad.",
+    indicador: "Voluntariado e inversión local",
   },
 ];
 
@@ -105,7 +112,7 @@ export const agenda = [
     descripcion: "Conferencias",
     bloques: [
       { nombre: "Recepción y networking dirigido", duracion: "30 min" },
-      { nombre: "Pitch de patrocinadores", duracion: "7 min" },
+      { nombre: "Palabras de nuestros aliados", duracion: "7 min" },
       { nombre: "Charlas de los ponentes", duracion: "40 min c/u" },
       { nombre: "Cierre y encuentros 1 a 1", duracion: "2 h" },
     ],
@@ -116,9 +123,9 @@ export const agenda = [
     nombre: "Cata de café",
     descripcion: "Por invitación",
     bloques: [
-      { nombre: "Cerca de 30 invitados perfilados", duracion: "" },
-      { nombre: "Networking director a director", duracion: "" },
-      { nombre: "Conversación directa con patrocinadores Capicúa", duracion: "" },
+      { nombre: "Café de origen, contado por quien lo cultiva", duracion: "" },
+      { nombre: "Conversaciones uno a uno, sin teléfonos", duracion: "" },
+      { nombre: "Por la tarde, cerca de 30 participantes y nuestros aliados oficiales", duracion: "" },
     ],
   },
 ];
@@ -129,6 +136,15 @@ export const cifras = [
   { valor: "3", etiqueta: "Ponentes, 40 minutos cada uno" },
 ];
 
+// Cómo se describe la sala a quien asiste (sin lenguaje de segmentación).
+export const perfilSala = [
+  { valor: "Dueños", etiqueta: "y directivos que toman las decisiones" },
+  { valor: "Jalisco", etiqueta: "empresas con años de operación" },
+  { valor: "100", etiqueta: "lugares en la sala" },
+  { valor: "1 día", etiqueta: "fuera de la operación" },
+];
+
+// Perfil para patrocinadores (/patrocina).
 export const perfilAsistente = [
   { valor: "40–50", etiqueta: "años de edad" },
   { valor: "AB · C+", etiqueta: "nivel socioeconómico" },
@@ -223,6 +239,7 @@ export type Boleto = {
   // Lugares que ocupa cada unidad (una mesa empresarial cuenta como 4).
   lugares: number;
   agotado?: boolean;
+  // Solo con el número real de lugares disponibles (Profeco): nunca una cifra de prueba.
   quedan?: number;
   // Precio de la siguiente fase: ancla el precio actual como oportunidad.
   precioSiguiente?: number;
@@ -230,19 +247,10 @@ export type Boleto = {
   nota?: string;
 };
 
-// TODO: nombres, precios, cupos y cifras de venta provisionales para el prototipo de compra.
-// Antes de publicar, cada cifra de escasez o prueba social debe salir de las ventas reales (Profeco).
+// TODO: nombres y precios provisionales para el prototipo de compra.
+// Sin escasez ni prueba social de muestra: cualquier cifra de lugares o de ventas debe salir
+// de las ventas reales (Profeco). La preventa para los "primeros 20" se maneja por invitación personal (/i/[slug]).
 export const boletos: Boleto[] = [
-  {
-    id: "preventa",
-    nombre: "Preventa",
-    descripcion: "Día 1 · Voces",
-    incluye: ["Las tres conferencias", "Networking y cierre"],
-    precio: 1950,
-    lugares: 1,
-    agotado: true,
-    nota: "Se agotó en 9 días",
-  },
   {
     id: "general",
     nombre: "General",
@@ -260,34 +268,65 @@ export const boletos: Boleto[] = [
     precio: 3450,
     precioSiguiente: 3950,
     lugares: 1,
-    quedan: 15,
-    destacado: "El más elegido",
+    destacado: "Incluye encuentro con ponentes",
   },
   {
     id: "mesa",
     nombre: "Mesa empresarial",
     descripcion: "4 lugares · Día 1",
-    incluye: ["Mesa reservada para tu equipo", "Mención en pantalla", "Una sola factura"],
+    incluye: ["Mesa reservada para tu equipo directivo", "Mención en pantalla", "Una sola factura"],
     precio: 8800,
     precioSiguiente: 10800,
     lugares: 4,
-    quedan: 6,
     nota: "$2,200 por persona · ahorras $1,000 frente a 4 boletos General",
   },
 ];
 
-// TODO: cifras provisionales; deben conectarse a las ventas reales.
+// Fecha real del cambio de precio. Es la única fecha límite que se comunica.
 export const venta = {
-  fase: "Fase 2",
   finFase: "2027-01-15T23:59:00-06:00",
   finFaseTexto: "15 de enero",
-  porcentajeVendido: 72,
-  confirmados: 86,
-  testimonio: {
-    texto: "Salí con tres conversaciones que cambiaron cómo dirijo a mi equipo. Volvería sin pensarlo.",
-    autor: "Nombre del asistente",
-    cargo: "Director general · Empresa",
+};
+
+// Un solo plazo en todo el sitio: tarjetas, resumen y pago.
+export const mesesSinIntereses = 3;
+
+// TODO: confirmar con el cliente y con el proveedor de pagos antes de publicar.
+export const politicaReembolso = [
+  {
+    titulo: "Reembolso completo hasta el 17 de enero de 2027",
+    texto:
+      "Hasta 30 días antes del evento te devolvemos el 100% de tu compra al mismo medio de pago, en un máximo de 10 días hábiles.",
   },
+  {
+    titulo: "Después, tu lugar es transferible",
+    texto:
+      "Desde el 18 de enero ya no hay reembolsos, pero puedes cambiar el nombre del pase sin costo hasta 48 horas antes del evento.",
+  },
+  {
+    titulo: "Si cambiamos fecha o cancelamos",
+    texto: "Eliges entre conservar tu lugar para la nueva fecha o recibir el reembolso completo.",
+  },
+  {
+    titulo: "Cómo solicitarlo",
+    texto: "Escríbenos por correo o WhatsApp con tu folio de compra. Te respondemos en un máximo de 48 horas.",
+  },
+];
+
+// El donativo, explicado para asistentes y patrocinadores.
+// TODO: publicar el nombre de las organizaciones en cuanto estén confirmadas con AFP.
+export const donativo = {
+  titulo: "La mitad de lo que aportan nuestros aliados se queda en Jalisco.",
+  texto:
+    "El 50% de cada patrocinio se entrega a organizaciones sociales de Jalisco. Las elegimos con AFP Capítulo Occidente Pacífico, la asociación que profesionaliza la procuración de fondos para que más causas consigan recursos y los usen bien.",
+  pasos: [
+    { titulo: "Los aliados aportan", texto: "Cada marca patrocinadora define su aportación." },
+    { titulo: "La mitad se aparta", texto: "El 50% se reserva desde el primer día; no paga la operación del evento." },
+    { titulo: "AFP acompaña la elección", texto: "Organizaciones de Jalisco con buenas prácticas de transparencia." },
+    { titulo: "Reporte público en abril", texto: "Cuánto se entregó, a quién y para qué. Con cifras, no con adjetivos." },
+  ],
+  boleto:
+    "Tu boleto cubre la experiencia: sede, producción y ponentes. El donativo sale de las aportaciones de los aliados.",
 };
 
 // Máximo de lugares por compra (no de boletos: una mesa ocupa 4).

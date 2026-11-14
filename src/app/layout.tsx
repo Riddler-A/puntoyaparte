@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s · Punto y Aparte",
   },
   description:
-    "Una pausa para replantear la forma de hacer negocios. Encuentros para dueños y directivos de empresa en Guadalajara.",
+    "Una pausa para pensar qué empresa vas a heredar. Encuentros para dueños y directivos de empresa en Guadalajara.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

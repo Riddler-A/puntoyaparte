@@ -2,16 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assets/marca/logo-punto-y-aparte.png";
 import { Pilares, TituloSeccion } from "@/components/secciones";
-import { edicion, preguntaCentral } from "@/lib/evento";
+import { donativo, edicion, lema, preguntaCentral } from "@/lib/evento";
 
 export default function Inicio() {
   return (
     <>
       <section className="contenedor grid gap-12 pt-12 pb-16 sm:py-24 lg:grid-cols-[1.6fr_1fr] lg:items-center">
         <div>
-          <p className="eyebrow">
-            Una pausa para replantear<span className="hidden sm:inline"> la forma de hacer negocios</span>
-          </p>
+          <p className="eyebrow">{lema}</p>
           <h1 className="mt-5 max-w-3xl font-display text-[1.75rem] leading-[1.18] tracking-[-0.01em] text-pretty sm:mt-6 sm:text-5xl sm:leading-[1.12] sm:tracking-tight lg:text-[3.5rem]">
             <span className="font-medium text-gris">{preguntaCentral.planteamiento}</span>{" "}
             <span className="font-bold">
@@ -20,7 +18,8 @@ export default function Inicio() {
             </span>
           </h1>
           <p className="mt-6 max-w-xl text-base text-gris sm:mt-8 sm:text-lg">
-            Ese es el diálogo que proponemos en Punto y Aparte.
+            Punto y Aparte reúne a dueños y directivos de Jalisco para conversar sobre empresas que prosperan y
+            también dejan algo valioso a su paso.
           </p>
         </div>
         {/* En móvil el encabezado ya muestra el logo */}
@@ -38,7 +37,7 @@ export default function Inicio() {
             {edicion.fechasLargas} · {edicion.ciudad}. Voces y cata de café.
           </p>
           <span className="mt-10 inline-flex items-center gap-2 font-semibold">
-            Solicita tu lugar <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+            Conoce la edición <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
           </span>
         </Link>
         <Link
@@ -60,6 +59,19 @@ export default function Inicio() {
         <div className="contenedor py-24">
           <TituloSeccion eyebrow="Cuatro pilares de diálogo" titulo="Hagamos que el éxito signifique algo más." />
           <Pilares />
+        </div>
+      </section>
+
+      <section className="contenedor py-24">
+        <div className="grid gap-8 rounded-3xl bg-tinta p-8 text-papel sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+          <div>
+            <p className="eyebrow">Lo que se aporta, se queda</p>
+            <h2 className="mt-4 font-display text-3xl leading-tight font-bold sm:text-4xl">{donativo.titulo}</h2>
+            <p className="mt-4 text-papel/70">{donativo.texto}</p>
+          </div>
+          <Link href={`/${edicion.anio}#donativo`} className="boton-primario justify-self-start">
+            Cómo funciona →
+          </Link>
         </div>
       </section>
     </>

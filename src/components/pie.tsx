@@ -17,6 +17,7 @@ export function Pie() {
           <p className="eyebrow mb-3">Explora</p>
           <ul className="space-y-2 text-papel/80">
             <li><Link href={`/${edicion.anio}`} className="hover:text-papel">Edición {edicion.anio}</Link></li>
+            <li><Link href={`/${edicion.anio}/boletos`} className="hover:text-papel">Boletos</Link></li>
             <li><Link href="/patrocina" className="hover:text-papel">Patrocina</Link></li>
             <li><Link href="/privacidad" className="hover:text-papel">Aviso de privacidad</Link></li>
           </ul>

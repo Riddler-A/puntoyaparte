@@ -106,3 +106,7 @@ Propuesta: Next.js + Supabase (auth, base de datos, almacenamiento) + envío de 
 - [ ] Confirmar a qué ponente corresponde cada foto en `assets/ponentes/`
 - [ ] Dominio y hosting
 - [ ] Aviso de privacidad (se recaban datos personales y de perfil)
+- [ ] Medición: píxel de Meta + API de conversiones, GA4 y Google Search Console (no instalados aún)
+- [ ] Política de reembolsos: confirmar fechas y montos con el cliente y el proveedor de pagos
+- [ ] Donativo: confirmar la regla del 50% y publicar los nombres de las organizaciones elegidas con AFP
+- [ ] Conectar escasez y ventas reales (hoy no se muestra ninguna cifra de ventas)
