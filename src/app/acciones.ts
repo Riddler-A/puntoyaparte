@@ -2,8 +2,8 @@
 
 import { z } from "zod";
 import { edicion } from "@/lib/evento";
+import { guardar } from "@/lib/datos";
 import { invitadoPorSlug } from "@/lib/invitados";
-import { supabaseServidor } from "@/lib/supabase";
 
 export type EstadoFormulario = {
   ok: boolean;
@@ -59,18 +59,6 @@ function valoresDe(formData: FormData) {
   return valores;
 }
 
-async function guardar(tabla: string, fila: Record<string, unknown>) {
-  const supabase = supabaseServidor();
-  if (!supabase) {
-    if (process.env.NODE_ENV === "development") {
-      console.warn(`[sin Supabase] ${tabla}:`, fila);
-      return { error: null };
-    }
-    return { error: { code: "sin-configuracion", message: "Supabase no está configurado." } };
-  }
-  return supabase.from(tabla).insert(fila);
-}
-
 export async function solicitarLugar(_previo: EstadoFormulario, formData: FormData): Promise<EstadoFormulario> {
   const valores = valoresDe(formData);
   const resultado = esquemaLugar.safeParse(valores);
@@ -84,14 +72,14 @@ export async function solicitarLugar(_previo: EstadoFormulario, formData: FormDa
   }
 
   const { acepta_privacidad: _acepta, ...datos } = resultado.data;
-  const { error } = await guardar("solicitudes_asistente", {
+  const { error } = guardar("solicitudes_asistente", {
     ...datos,
     email: datos.email.toLowerCase(),
     edicion: edicion.anio,
   });
 
   if (error) {
-    if (error.code === "23505") {
+    if (error.code === "duplicado") {
       return {
         ok: false,
         mensaje: "Ya recibimos una solicitud con este correo para esta edición. Te escribiremos pronto.",
@@ -124,7 +112,7 @@ export async function aceptarInvitacion(_previo: EstadoFormulario, formData: For
   const invitado = invitadoPorSlug(slug);
   if (!invitado) return { ok: false, mensaje: "Esta invitación ya no es válida.", valores };
 
-  const { error } = await guardar("invitaciones_aceptadas", {
+  const { error } = guardar("invitaciones_aceptadas", {
     ...datos,
     email: datos.email.toLowerCase(),
     invitado_slug: invitado.slug,
@@ -133,7 +121,7 @@ export async function aceptarInvitacion(_previo: EstadoFormulario, formData: For
   });
 
   // Si ya aceptó con este correo, se trata como éxito: no hay nada que corregir.
-  if (error && error.code !== "23505") {
+  if (error && error.code !== "duplicado") {
     console.error("aceptarInvitacion", error);
     return { ok: false, mensaje: "No pudimos registrar tu respuesta. Intenta de nuevo en unos minutos.", valores };
   }
@@ -154,7 +142,7 @@ export async function solicitarPropuesta(_previo: EstadoFormulario, formData: Fo
   }
 
   const { acepta_privacidad: _acepta, ...datos } = resultado.data;
-  const { error } = await guardar("solicitudes_patrocinio", {
+  const { error } = guardar("solicitudes_patrocinio", {
     ...datos,
     email: datos.email.toLowerCase(),
     edicion: edicion.anio,

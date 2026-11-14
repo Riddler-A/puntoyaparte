@@ -94,7 +94,7 @@ Complemento para patrocinadores (fase 2–3): portal con sus encuentros 1 a 1, c
 
 Las funciones de cuenta (registro, aprobación, QR, agenda, matchmaking) requieren backend: autenticación, base de datos y panel de administración para aprobar solicitudes. Un sitio estático no basta.
 
-Propuesta: Next.js + Supabase (auth, base de datos, almacenamiento) + envío de correos transaccionales. Hosting en Vercel o en el servidor propio.
+Decisión: Next.js con base de datos SQLite en el servidor propio (Hestia) y envío de correos transaccionales.
 
 ## Pendientes antes de publicar
 

@@ -4,6 +4,9 @@ import { CartaInvitacion } from "@/components/carta-invitacion";
 import { edicion } from "@/lib/evento";
 import { invitadoPorSlug, invitados } from "@/lib/invitados";
 
+// Se llega por un enlace o un QR, no navegando dentro del sitio: puede esperar al servidor.
+export const instant = false;
+
 export function generateStaticParams() {
   return invitados.map((i) => ({ slug: i.slug }));
 }

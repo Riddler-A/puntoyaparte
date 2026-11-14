@@ -1,5 +1,5 @@
 // Invitaciones personales. Cada invitado tiene su dirección /i/<slug>, pensada para un QR.
-// TODO: mover a Supabase cuando haya más invitados que editar a mano.
+// TODO: mover a la base de datos cuando haya más invitados que editar a mano.
 
 export type Invitado = {
   slug: string;
