@@ -5,6 +5,9 @@ import ponente3 from "@/assets/ponentes/ponente-3.png";
 
 // Contenido de la edición actual. Fuente: "Punto y Aparte — Patrocinios 2027".
 
+// Dirección pública del sitio (servidor Hestia). Se usa en enlaces para compartir y en los QR.
+export const sitioUrl = "https://punto-y-aparte.com";
+
 export const edicion = {
   anio: "2027",
   ciudad: "Guadalajara",

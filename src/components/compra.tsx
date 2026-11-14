@@ -11,6 +11,7 @@ import {
   maximoPorCompra,
   ponentes,
   regimenesFiscales,
+  sitioUrl,
   venta,
   type Boleto,
 } from "@/lib/evento";
@@ -740,7 +741,7 @@ function Confirmacion({ folio, cantidades, datos }: { folio: string; cantidades:
           </a>
           <a
             href={`https://wa.me/?text=${encodeURIComponent(
-              `Voy a Punto y Aparte ${edicion.anio} (${edicion.fechasLargas}, ${edicion.ciudad}). ¿Te animas? https://puntoy-aparte.netlify.app/2027`,
+              `Voy a Punto y Aparte ${edicion.anio} (${edicion.fechasLargas}, ${edicion.ciudad}). ¿Te animas? ${sitioUrl}/2027`,
             )}`}
             target="_blank"
             rel="noreferrer"

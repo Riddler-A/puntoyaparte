@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight } from "next/font/google";
+import { sitioUrl } from "@/lib/evento";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,6 +14,7 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(sitioUrl),
   title: {
     default: "Punto y Aparte · Conversaciones sobre empresa, prosperidad y humanidad",
     template: "%s · Punto y Aparte",
