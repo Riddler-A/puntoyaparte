@@ -1,18 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/marca/logo-punto-y-aparte.png";
-import { Pilares, TituloSeccion } from "@/components/secciones";
+import { Pilares, Punto, TituloSeccion } from "@/components/secciones";
 import { donativo, edicion, lema, preguntaCentral } from "@/lib/evento";
 
 export default function Inicio() {
   return (
     <>
-      <section className="contenedor grid gap-12 pt-12 pb-16 sm:py-24 lg:grid-cols-[1.6fr_1fr] lg:items-center">
-        <div>
+      <section className="relative overflow-hidden">
+        {/* El logo ya está en el encabezado; aquí solo queda el punto de la marca */}
+        <Punto className="top-1/2 -right-40 hidden size-[22rem] -translate-y-1/2 lg:block xl:-right-16 xl:size-[30rem]" />
+        <div className="contenedor relative pt-12 pb-16 sm:py-24">
           <p className="eyebrow">{lema}</p>
           <h1 className="mt-5 max-w-3xl font-display text-[1.75rem] leading-[1.18] tracking-[-0.01em] text-pretty sm:mt-6 sm:text-5xl sm:leading-[1.12] sm:tracking-tight lg:text-[3.5rem]">
             <span className="font-medium text-gris">{preguntaCentral.planteamiento}</span>{" "}
-            <span className="font-bold">
+            <span className="font-bold sm:block">
               {preguntaCentral.remate}
               <span className="text-punto">?</span>
             </span>
@@ -22,8 +22,6 @@ export default function Inicio() {
             también dejan algo valioso a su paso.
           </p>
         </div>
-        {/* En móvil el encabezado ya muestra el logo */}
-        <Image src={logo} alt="Punto y Aparte" priority className="mx-auto hidden w-full max-w-sm lg:block" />
       </section>
 
       <section className="contenedor grid gap-6 pb-24 md:grid-cols-2">
