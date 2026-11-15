@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CartaInvitacion } from "@/components/carta-invitacion";
+import { Medicion } from "@/components/medicion";
 import { edicion } from "@/lib/evento";
 import { invitadoPorSlug, invitados } from "@/lib/invitados";
 
@@ -24,5 +25,10 @@ export async function generateMetadata({ params }: PageProps<"/i/[slug]">): Prom
 export default async function Invitacion({ params }: PageProps<"/i/[slug]">) {
   const invitado = invitadoPorSlug((await params).slug);
   if (!invitado) notFound();
-  return <CartaInvitacion invitado={invitado} />;
+  return (
+    <>
+      <Medicion />
+      <CartaInvitacion invitado={invitado} />
+    </>
+  );
 }

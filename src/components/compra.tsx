@@ -18,6 +18,7 @@ import {
   venta,
   type Boleto,
 } from "@/lib/evento";
+import { evento } from "@/lib/medicion";
 
 // Prototipo de compra: el pago es simulado hasta conectar el proveedor (Stripe).
 // Decisiones de persuasión: ancla de precio (fecha real de cambio), transparencia del donativo,
@@ -107,6 +108,7 @@ export function Compra() {
       setLimite(Date.now() + apartadoSegundos * 1000);
       setRestante(apartadoSegundos);
       setExpirado(false);
+      evento("begin_checkout", { value: total, currency: "MXN", lugares });
     }
     setPaso(destino);
     window.scrollTo({ top: 0, behavior: "smooth" });

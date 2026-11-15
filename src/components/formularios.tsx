@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, type ReactNode } from "react";
+import { useActionState, useEffect, type ReactNode } from "react";
 import { solicitarLugar, solicitarPropuesta, type EstadoFormulario } from "@/app/acciones";
 import {
   opcionesComoSeEntero,
@@ -10,8 +10,16 @@ import {
   paquetes,
   pilares,
 } from "@/lib/evento";
+import { evento } from "@/lib/medicion";
 
 const inicial: EstadoFormulario = { ok: false, mensaje: "" };
+
+// Avisa a la medición cuando un formulario se envió con éxito.
+function useLead(estado: EstadoFormulario, formulario: string) {
+  useEffect(() => {
+    if (estado.ok) evento("generate_lead", { formulario });
+  }, [estado.ok, formulario]);
+}
 
 type PropsCampo = {
   nombre: string;
@@ -107,6 +115,7 @@ function Aviso({ estado }: { estado: EstadoFormulario }) {
 
 export function FormularioLugar() {
   const [estado, accion, enviando] = useActionState(solicitarLugar, inicial);
+  useLead(estado, "solicitud_lugar");
 
   if (estado.ok) return <Resultado estado={estado} titulo="Solicitud recibida" />;
 
@@ -175,6 +184,7 @@ export function FormularioLugar() {
 
 export function FormularioPropuesta() {
   const [estado, accion, enviando] = useActionState(solicitarPropuesta, inicial);
+  useLead(estado, "patrocinio");
 
   if (estado.ok) return <Resultado estado={estado} titulo="Gracias por tu interés" />;
 

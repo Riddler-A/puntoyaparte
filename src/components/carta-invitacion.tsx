@@ -7,6 +7,7 @@ import { aceptarInvitacion, type EstadoFormulario } from "@/app/acciones";
 import logo from "@/assets/marca/logo-punto-y-aparte.png";
 import { contacto, edicion, enlaceCalendario } from "@/lib/evento";
 import type { Invitado } from "@/lib/invitados";
+import { evento } from "@/lib/medicion";
 
 type Etapa = "carta" | "preguntas";
 type Valores = Record<string, string>;
@@ -62,6 +63,10 @@ const inicial: EstadoFormulario = { ok: false, mensaje: "" };
 export function CartaInvitacion({ invitado }: { invitado: Invitado }) {
   const [etapa, setEtapa] = useState<Etapa>("carta");
   const [estado, accion, enviando] = useActionState(aceptarInvitacion, inicial);
+
+  useEffect(() => {
+    if (estado.ok) evento("generate_lead", { formulario: "invitacion", invitado: invitado.slug });
+  }, [estado.ok, invitado.slug]);
 
   return (
     <div className="flex min-h-dvh flex-col items-center px-4 py-8 sm:py-14">
