@@ -1,23 +1,16 @@
 import Script from "next/script";
-import { gtmId } from "@/lib/medicion";
+import { googleTagId } from "@/lib/medicion";
 
-// Contenedor de Google Tag Manager. Solo en producción, para no ensuciar los datos con pruebas locales.
-// Va en las páginas públicas; /admin no se mide.
+// Etiqueta de Google (GA4), tal como la entrega Google. Solo en producción, para no ensuciar los datos
+// con pruebas locales. Va en las páginas públicas; /admin no se mide.
 export function Medicion() {
   if (process.env.NODE_ENV !== "production") return null;
   return (
     <>
-      <Script id="gtm" strategy="afterInteractive">
-        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`}
+      <Script src={`https://www.googletagmanager.com/gtm.js?id=${googleTagId}`} strategy="afterInteractive" />
+      <Script id="google-tag" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());`}
       </Script>
-      <noscript>
-        <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-          height="0"
-          width="0"
-          style={{ display: "none", visibility: "hidden" }}
-        />
-      </noscript>
     </>
   );
 }
