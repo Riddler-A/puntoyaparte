@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { edicion } from "@/lib/evento";
+import { avisoInterno, correoInvitado, enviar } from "@/lib/correo";
 import { guardar } from "@/lib/datos";
 import { invitadoPorSlug } from "@/lib/invitados";
 
@@ -90,6 +91,20 @@ export async function solicitarLugar(_previo: EstadoFormulario, formData: FormDa
     return { ok: false, mensaje: "No pudimos enviar tu solicitud. Intenta de nuevo en unos minutos.", valores };
   }
 
+  const aviso = avisoInterno("Solicitud de lugar", {
+    nombre: `${datos.nombre} ${datos.apellido}`,
+    email: datos.email,
+    telefono: datos.telefono,
+    empresa: datos.empresa,
+    puesto: datos.puesto,
+    giro: datos.giro,
+    "tamaño": datos.tamano_empresa,
+    pilar: datos.pilar_interes,
+    "cómo se enteró": datos.como_se_entero ?? undefined,
+    motivo: datos.motivo ?? undefined,
+  });
+  if (aviso) await enviar(aviso);
+
   return {
     ok: true,
     mensaje: `Gracias, ${datos.nombre}. Revisaremos tu perfil y te escribiremos a ${datos.email} para confirmar tu lugar.`,
@@ -120,10 +135,23 @@ export async function aceptarInvitacion(_previo: EstadoFormulario, formData: For
     edicion: edicion.anio,
   });
 
-  // Si ya aceptó con este correo, se trata como éxito: no hay nada que corregir.
+  // Si ya aceptó con este correo, se trata como éxito: no hay nada que corregir y no se reenvía nada.
   if (error && error.code !== "duplicado") {
     console.error("aceptarInvitacion", error);
     return { ok: false, mensaje: "No pudimos registrar tu respuesta. Intenta de nuevo en unos minutos.", valores };
+  }
+
+  if (!error) {
+    await enviar(correoInvitado(datos.nombre, invitado.invitaPor, datos.email.toLowerCase()));
+    const aviso = avisoInterno("Invitación aceptada", {
+      nombre: datos.nombre,
+      email: datos.email,
+      telefono: datos.telefono,
+      giro: datos.giro,
+      invitado: invitado.nombreCompleto,
+      "invita por": invitado.invitaPor,
+    });
+    if (aviso) await enviar(aviso);
   }
 
   return { ok: true, mensaje: datos.email };
@@ -152,6 +180,17 @@ export async function solicitarPropuesta(_previo: EstadoFormulario, formData: Fo
     console.error("solicitarPropuesta", error);
     return { ok: false, mensaje: "No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos por WhatsApp.", valores };
   }
+
+  const aviso = avisoInterno("Solicitud de patrocinio", {
+    nombre: datos.nombre,
+    email: datos.email,
+    telefono: datos.telefono,
+    empresa: datos.empresa,
+    puesto: datos.puesto,
+    paquete: datos.paquete,
+    mensaje: datos.mensaje ?? undefined,
+  });
+  if (aviso) await enviar(aviso);
 
   return {
     ok: true,
