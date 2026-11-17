@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { TituloSeccion } from "@/components/secciones";
-import { edicion, lecturaPrevia, pilares } from "@/lib/evento";
+import { edicion, lecturaPrevia } from "@/lib/evento";
 
 export const metadata: Metadata = {
   title: "Lectura previa: Capitalismo consciente",
@@ -28,6 +29,12 @@ const principios = [
   },
 ];
 
+// Fotos de los autores, en el orden en que las entregó el equipo: primero John Mackey, después Raj Sisodia.
+const autores = [
+  { src: "/lectura/autor-1.webp", alt: "Retrato de John Mackey", nombre: "John Mackey" },
+  { src: "/lectura/autor-2.png", alt: "Retrato de Raj Sisodia", nombre: "Raj Sisodia" },
+];
+
 const preguntas = [
   "¿Cuál es el propósito de tu empresa más allá de la utilidad?",
   "¿Quiénes son tus grupos de interés y cuál de ellos descuidas hoy?",
@@ -37,42 +44,58 @@ const preguntas = [
 export default function Lectura() {
   return (
     <>
-      <section className="contenedor pt-16 pb-12 sm:pt-24">
-        <p className="eyebrow">Lectura previa</p>
-        <h1 className="titulo mt-4 max-w-3xl">{lecturaPrevia.libro}.</h1>
-        <p className="mt-6 max-w-2xl text-lg text-gris">
-          {lecturaPrevia.autores}. Es la lectura de referencia de Punto y Aparte: la idea de que una empresa puede ser
-          rentable y, al mismo tiempo, dejar algo valioso a su paso.
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a href={lecturaPrevia.enlace} target="_blank" rel="sponsored noopener noreferrer" className="boton-primario">
-            Comprar en Mercado Libre →
-          </a>
-          <p className="max-w-sm text-xs text-gris">{lecturaPrevia.aviso}</p>
+      <section className="contenedor grid gap-10 pt-16 pb-12 sm:pt-24 md:grid-cols-[minmax(0,320px)_1fr] md:items-center">
+        <div className="relative aspect-[758/1200] w-full max-w-xs overflow-hidden rounded-2xl ring-1 ring-tinta/10 md:max-w-none">
+          <Image
+            src="/lectura/libro.webp"
+            alt="Portada de Capitalismo consciente, edición de Empresa Activa"
+            fill
+            sizes="(min-width: 768px) 320px, 80vw"
+            className="object-cover"
+            priority
+          />
+        </div>
+        <div>
+          <p className="eyebrow">Lectura previa</p>
+          <h1 className="titulo mt-4 max-w-3xl">{lecturaPrevia.libro}.</h1>
+          <p className="mt-6 max-w-2xl text-lg text-gris">
+            {lecturaPrevia.autores}. Es la lectura de referencia de Punto y Aparte: la idea de que una empresa puede ser
+            rentable y, al mismo tiempo, dejar algo valioso a su paso.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href={lecturaPrevia.enlace} target="_blank" rel="sponsored noopener noreferrer" className="boton-primario">
+              Comprar en Mercado Libre →
+            </a>
+            <p className="max-w-sm text-xs text-gris">{lecturaPrevia.aviso}</p>
+          </div>
         </div>
       </section>
 
       <section className="bg-papel">
         <div className="contenedor py-20">
-          <TituloSeccion eyebrow="Por qué este libro" titulo="La idea que sostiene los cuatro pilares.">
-            Punto y Aparte pregunta si el éxito de una empresa significa algo más que sus cifras. Este libro lo plantea
-            con un método: ordena la conversación en principios que cualquier dueño puede revisar en su propio negocio.
+          <TituloSeccion eyebrow="La idea central" titulo="Una empresa puede ser rentable y dejar valor a su paso.">
+            Es la pregunta que Punto y Aparte pone sobre la mesa, y este libro la responde con un método.
           </TituloSeccion>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {pilares.map((p) => (
-              <p key={p.nombre} className="rounded-2xl bg-crema p-6 text-sm text-gris ring-1 ring-tinta/10">
-                <span className="font-display font-bold text-tinta">
-                  {p.numero} · {p.nombre}.
-                </span>{" "}
-                {p.texto}
-              </p>
-            ))}
-          </div>
         </div>
       </section>
 
       <section className="contenedor py-20">
-        <TituloSeccion eyebrow="Resumen" titulo="Cuatro principios, dicho con nuestras palabras." />
+        <TituloSeccion eyebrow="Los autores" titulo="Quienes escribieron el libro." />
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {autores.map((a) => (
+            <figure key={a.src} className="overflow-hidden rounded-3xl bg-arena ring-1 ring-tinta/10">
+              <div className="relative aspect-[4/3]">
+                <Image src={a.src} alt={a.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-top" />
+              </div>
+              <figcaption className="p-6 font-display text-xl font-bold">{a.nombre}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section className="bg-papel">
+        <div className="contenedor py-20">
+          <TituloSeccion eyebrow="Resumen" titulo="Cuatro principios, dicho con nuestras palabras." />
         <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-tinta/10 ring-1 ring-tinta/10 sm:grid-cols-2">
           {principios.map((p, i) => (
             <li key={p.titulo} className="bg-papel p-7">
@@ -84,8 +107,10 @@ export default function Lectura() {
         </ol>
         <p className="mt-8 max-w-3xl text-sm text-gris">
           Resumen propio de las ideas principales del libro, no una reproducción del texto. Para los matices, lee la obra.
-          Edición original en inglés: Harvard Business Review Press.
+          Edición en español: Empresa Activa, colección Gestión del conocimiento. Edición original en inglés: Harvard
+          Business Review Press.
         </p>
+        </div>
       </section>
 
       <section className="bg-tinta text-papel">
