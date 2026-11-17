@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Pilares, Punto, TituloSeccion } from "@/components/secciones";
 import { donativo, edicion, lecturaPrevia, lema, preguntaCentral } from "@/lib/evento";
@@ -61,7 +62,10 @@ export default function Inicio() {
       </section>
 
       <section className="contenedor py-24">
-        <div className="grid gap-8 rounded-3xl bg-crema p-8 ring-1 ring-tinta/10 sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+        <div className="grid gap-8 rounded-3xl bg-crema p-8 ring-1 ring-tinta/10 sm:p-12 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+          <div className="relative mx-auto aspect-[758/1200] w-40 overflow-hidden rounded-xl ring-1 ring-tinta/10 lg:mx-0 lg:w-32">
+            <Image src="/lectura/libro.webp" alt="Portada de Capitalismo consciente" fill sizes="160px" className="object-cover" />
+          </div>
           <div>
             <p className="eyebrow">{lecturaPrevia.eyebrow}</p>
             <h2 className="mt-4 font-display text-3xl leading-tight font-bold sm:text-4xl">{lecturaPrevia.titulo}</h2>
