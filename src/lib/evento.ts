@@ -30,7 +30,7 @@ export const contacto = {
   cargo: "Comercialización",
   telefono: "33 1738 0678",
   whatsapp: "https://wa.me/523317380678",
-  email: "comercializacion.vh@gmail.com",
+  email: "contacto@punto-y-aparte.com",
   instagram: "https://www.instagram.com/____puntoyaparte",
   instagramUsuario: "@____puntoyaparte",
 };
