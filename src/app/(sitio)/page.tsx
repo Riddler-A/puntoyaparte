@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Pilares, Punto, TituloSeccion } from "@/components/secciones";
-import { donativo, edicion, lema, preguntaCentral } from "@/lib/evento";
+import { donativo, edicion, lecturaPrevia, lema, preguntaCentral } from "@/lib/evento";
 
 export default function Inicio() {
   return (
@@ -61,6 +61,32 @@ export default function Inicio() {
       </section>
 
       <section className="contenedor py-24">
+        <div className="grid gap-8 rounded-3xl bg-crema p-8 ring-1 ring-tinta/10 sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+          <div>
+            <p className="eyebrow">{lecturaPrevia.eyebrow}</p>
+            <h2 className="mt-4 font-display text-3xl leading-tight font-bold sm:text-4xl">{lecturaPrevia.titulo}</h2>
+            <p className="mt-4 text-gris">{lecturaPrevia.texto}</p>
+            <p className="mt-6 font-display text-xl font-bold">{lecturaPrevia.libro}</p>
+            <p className="text-sm text-gris">{lecturaPrevia.autores}</p>
+          </div>
+          <div className="grid gap-3 justify-self-start lg:justify-self-end">
+            <a
+              href={lecturaPrevia.enlace}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              className="boton-primario"
+            >
+              Comprar en Mercado Libre →
+            </a>
+            <Link href="/lectura" className="text-sm font-semibold underline underline-offset-4 hover:text-punto">
+              Leer el resumen y por qué este libro →
+            </Link>
+            <p className="max-w-xs text-xs text-gris">{lecturaPrevia.aviso}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="contenedor pb-24">
         <div className="grid gap-8 rounded-3xl bg-tinta p-8 text-papel sm:p-12 lg:grid-cols-[1.4fr_1fr] lg:items-center">
           <div>
             <p className="eyebrow">Lo que se aporta, se queda</p>

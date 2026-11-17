@@ -362,3 +362,15 @@ export const opcionesComoSeEntero = [
   "Un patrocinador",
   "Otro",
 ];
+
+// Lectura previa: la premisa central del evento. El enlace es de Mercado Libre (con programa de afiliados).
+export const lecturaPrevia = {
+  eyebrow: "Antes de llegar",
+  titulo: "Lee la premisa del evento.",
+  texto:
+    "Capitalismo consciente es la base de las ideas que se conversan en Punto y Aparte. Si quieres llegar preparado, cómpralo y léelo antes del 17 de febrero.",
+  libro: "Capitalismo consciente: libera el espíritu heroico de los negocios",
+  autores: "John Mackey y Raj Sisodia",
+  enlace: "https://meli.la/2WVczQP",
+  aviso: "Enlace de afiliado: si compras por este enlace, quien lo comparte recibe una comisión sin costo para ti.",
+} as const;
