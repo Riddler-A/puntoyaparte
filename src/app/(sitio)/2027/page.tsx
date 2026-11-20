@@ -31,7 +31,7 @@ const mensajeNominacion = encodeURIComponent(
 const preguntasFrecuentes = [
   {
     pregunta: "¿Cuánto cuesta y qué incluye?",
-    respuesta: `Hay boleto General, Preferente (con encuentro 1 a 1 con ponentes) y Mesa empresarial para 4 personas. Los precios incluyen IVA y suben el ${venta.finFaseTexto}. Puedes pagar con tarjeta a ${mesesSinIntereses} meses sin intereses, OXXO o transferencia, y pedir factura CFDI.`,
+    respuesta: `Hay boleto General, Preferente (con encuentro 1 a 1 con ponentes) y Mesa empresarial para 4 personas. Los precios incluyen IVA y suben el ${venta.finFaseTexto}. Puedes pagar con tarjeta a ${mesesSinIntereses} meses sin intereses o por transferencia, y pedir factura CFDI.`,
   },
   {
     pregunta: "¿Puedo pedir un reembolso?",

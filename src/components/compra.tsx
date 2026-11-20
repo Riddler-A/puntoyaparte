@@ -28,7 +28,15 @@ import { evento } from "@/lib/medicion";
 type Paso = "boletos" | "datos" | "pago" | "listo";
 type Cantidades = Record<string, number>;
 type Datos = Record<string, string>;
-type Metodo = "tarjeta" | "oxxo" | "spei";
+type Metodo = "tarjeta" | "spei";
+
+// Cuenta para transferencias SPEI. Son datos públicos de cobro: se muestran al comprador a propósito.
+const cuentaTransferencia = {
+  beneficiario: "PROYECTOS CONGRESOS Y EVENTOS PROCEV S.A. DE C.V.",
+  banco: "BBVA Bancomer",
+  cuenta: "0120798975",
+  clabe: "012840001207989757",
+};
 
 const pasos: { id: Paso; nombre: string }[] = [
   { id: "boletos", nombre: "Boletos" },
@@ -642,7 +650,6 @@ function FormularioDatos({
 
 const metodos: { id: Metodo; nombre: string; detalle: string }[] = [
   { id: "tarjeta", nombre: "Tarjeta", detalle: "Crédito o débito · meses sin intereses" },
-  { id: "oxxo", nombre: "OXXO", detalle: "Pago en efectivo · 3 días para pagar" },
   { id: "spei", nombre: "Transferencia", detalle: "SPEI desde tu banca" },
 ];
 
@@ -706,17 +713,24 @@ function Pago({ total, pagar, volver }: { total: number; pagar: () => void; volv
             </select>
           </>
         )}
-        {metodo === "oxxo" && (
-          <p className="text-sm text-gris">
-            Al confirmar, generamos una ficha con código de barras para pagar en cualquier OXXO. Tus boletos quedan
-            apartados 3 días y te llegan por correo cuando se acredite el pago.
-          </p>
-        )}
         {metodo === "spei" && (
-          <p className="text-sm text-gris">
-            Al confirmar, te damos una CLABE única para esta compra. El pago se acredita en minutos y te enviamos tus
-            boletos por correo.
-          </p>
+          <div className="text-sm text-gris">
+            <p>Haz tu transferencia desde tu banca en línea (SPEI) a esta cuenta:</p>
+            <dl className="mt-4 grid gap-2 rounded-2xl bg-crema p-4 text-tinta sm:grid-cols-[auto_1fr] sm:gap-x-6">
+              <dt className="text-gris">Beneficiario</dt>
+              <dd className="font-semibold">{cuentaTransferencia.beneficiario}</dd>
+              <dt className="text-gris">Banco</dt>
+              <dd className="font-semibold">{cuentaTransferencia.banco}</dd>
+              <dt className="text-gris">Cuenta</dt>
+              <dd className="font-semibold tabular-nums">{cuentaTransferencia.cuenta}</dd>
+              <dt className="text-gris">CLABE</dt>
+              <dd className="font-semibold tabular-nums">{cuentaTransferencia.clabe}</dd>
+            </dl>
+            <p className="mt-4">
+              Pon tu nombre completo como concepto de la transferencia. Cuando se acredite, te enviamos tus boletos por
+              correo.
+            </p>
+          </div>
         )}
       </div>
 
@@ -727,9 +741,7 @@ function Pago({ total, pagar, volver }: { total: number; pagar: () => void; volv
         <button type="button" onClick={confirmar} disabled={procesando} className="boton-primario disabled:opacity-60">
           {procesando
             ? "Procesando…"
-            : metodo === "tarjeta"
-              ? `Confirmar mis lugares · ${pesos(total)}`
-              : "Generar referencia de pago"}
+            : `Confirmar mis lugares · ${pesos(total)}`}
         </button>
       </div>
       <p className="mt-4 text-center text-xs text-gris sm:text-right">
