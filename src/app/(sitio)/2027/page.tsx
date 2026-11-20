@@ -48,7 +48,7 @@ const preguntasFrecuentes = [
   {
     pregunta: "¿Qué es la cata de café?",
     respuesta:
-      "El segundo día es un encuentro por la tarde para cerca de 30 participantes con boleto y nuestros aliados oficiales: café de origen, conversaciones uno a uno y sin teléfonos. La invitación llega por correo.",
+      "Es un encuentro el 23 de febrero, de 9 a 11 am, para cerca de 30 participantes con boleto y nuestros aliados oficiales: café de origen, conversaciones uno a uno y sin teléfonos. Es por invitación, que llega por correo.",
   },
   {
     pregunta: "¿Puedo ir con mi equipo directivo?",
@@ -150,7 +150,7 @@ export default function Edicion2027() {
 
       {/* Agenda */}
       <section id="agenda" className="contenedor scroll-mt-20 py-24">
-        <TituloSeccion eyebrow="La experiencia" titulo="Dos días, dos formas de conversar." />
+        <TituloSeccion eyebrow="La experiencia" titulo="Dos encuentros, dos formas de conversar." />
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           {agenda.map((d, i) => (
             <article

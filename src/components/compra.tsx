@@ -457,7 +457,7 @@ function SeleccionBoletos({
       </div>
 
       <p className="mt-6 text-sm text-gris">
-        El Día 2 (cata de café) es por invitación: la extendemos a cerca de 30 participantes con boleto.
+        La cata de café (23 de febrero, 9 a 11 am) es por invitación: la extendemos a cerca de 30 participantes con boleto.
       </p>
     </section>
   );

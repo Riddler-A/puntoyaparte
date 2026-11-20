@@ -12,16 +12,16 @@ export const edicion = {
   anio: "2027",
   ciudad: "Guadalajara",
   sede: "Sede por anunciar",
-  inicio: "2027-02-17T09:00:00-06:00",
-  fechasLargas: "17 y 18 de febrero de 2027",
-  fechasCortas: "17–18 feb 2027",
+  inicio: "2027-02-17T19:00:00-06:00",
+  fechasLargas: "17 de febrero de 2027",
+  fechasCortas: "17 feb 2027",
 };
 
-// TODO: horario provisional (9:00 a 18:00, hora de Guadalajara).
+// Evento: 17 de febrero, 7:00 a 10:00 pm, hora de Guadalajara (sin horario de verano).
 export const enlaceCalendario = `https://calendar.google.com/calendar/render?${new URLSearchParams({
   action: "TEMPLATE",
   text: `Punto y Aparte ${edicion.anio}`,
-  dates: "20270217T150000Z/20270218T000000Z",
+  dates: "20270218T010000Z/20270218T040000Z",
   location: edicion.ciudad,
 })}`;
 
@@ -106,8 +106,8 @@ export const ponentes: Ponente[] = [
 
 export const agenda = [
   {
-    dia: "Día 1",
-    fecha: "17 de febrero",
+    dia: "Evento",
+    fecha: "17 de febrero, 7 a 10 pm",
     nombre: "Voces",
     descripcion: "Conferencias",
     bloques: [
@@ -118,8 +118,8 @@ export const agenda = [
     ],
   },
   {
-    dia: "Día 2",
-    fecha: "18 de febrero",
+    dia: "Cata de café",
+    fecha: "23 de febrero, 9 a 11 am",
     nombre: "Cata de café",
     descripcion: "Por invitación",
     bloques: [
@@ -132,7 +132,7 @@ export const agenda = [
 
 export const cifras = [
   { valor: "100", etiqueta: "Dueños y directivos perfilados" },
-  { valor: "2", etiqueta: "Días: Voces y cata de café" },
+  { valor: "2", etiqueta: "Encuentros: Voces y cata de café" },
   { valor: "3", etiqueta: "Ponentes, 40 minutos cada uno" },
 ];
 
@@ -254,7 +254,7 @@ export const boletos: Boleto[] = [
   {
     id: "general",
     nombre: "General",
-    descripcion: "Día 1 · Voces",
+    descripcion: "Evento · Voces",
     incluye: ["Las tres conferencias", "Networking y cierre"],
     precio: 2450,
     precioSiguiente: 2950,
@@ -263,7 +263,7 @@ export const boletos: Boleto[] = [
   {
     id: "preferente",
     nombre: "Preferente",
-    descripcion: "Día 1 · Voces",
+    descripcion: "Evento · Voces",
     incluye: ["Primeras filas", "Encuentros 1 a 1 con ponentes", "Kit de bienvenida"],
     precio: 3450,
     precioSiguiente: 3950,
@@ -273,7 +273,7 @@ export const boletos: Boleto[] = [
   {
     id: "mesa",
     nombre: "Mesa empresarial",
-    descripcion: "4 lugares · Día 1",
+    descripcion: "4 lugares · Evento",
     incluye: ["Mesa reservada para tu equipo directivo", "Mención en pantalla", "Una sola factura"],
     precio: 8800,
     precioSiguiente: 10800,
