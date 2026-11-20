@@ -29,7 +29,11 @@ function smtp() {
   return transporte;
 }
 
-type Mensaje = { para: string; asunto: string; texto: string; responderA?: string };
+type Mensaje = { para: string; asunto: string; texto: string; html?: string; responderA?: string };
+
+// Escapa texto antes de meterlo en HTML.
+const escapar = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 // Devuelve false si no se pudo enviar. Nunca lanza: una falla de correo no debe cancelar una respuesta ya guardada.
 export async function enviar(mensaje: Mensaje): Promise<boolean> {
@@ -45,6 +49,7 @@ export async function enviar(mensaje: Mensaje): Promise<boolean> {
       to: mensaje.para,
       subject: mensaje.asunto,
       text: mensaje.texto,
+      html: mensaje.html,
       replyTo: mensaje.responderA ?? responderA,
     });
     return true;
@@ -73,6 +78,22 @@ export function correoInvitado(nombre: string, invitaPor: string, para: string):
       "Punto y Aparte",
       sitioUrl,
     ].join("\n"),
+    html: [
+      `<div style="font-family:Arial,Helvetica,sans-serif;color:#1e1c1c;font-size:16px;line-height:1.5;max-width:560px">`,
+      `<p>Hola ${escapar(nombre)},</p>`,
+      `<p>${escapar(invitaPor)} te invita a Punto y Aparte ${edicion.anio}: ${escapar(edicion.fechasLargas)}, ${escapar(edicion.ciudad)}.</p>`,
+      `<p>Punto y Aparte reúne a dueños y directivos para conversar sobre empresas que prosperan y también dejan algo valioso a su paso.</p>`,
+      `<p>Te avisaremos antes que a nadie cuando abra la preventa, y te escribiremos sobre lo que preparemos hasta el día del evento.</p>`,
+      `<p>Agrega el evento a tu calendario: <a href="${enlaceCalendario}" style="color:#f94441">Guardar en mi calendario</a></p>`,
+      `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #e9e1d6;padding-top:16px"><tr>`,
+      `<td style="padding-right:16px;vertical-align:middle"><a href="${sitioUrl}"><img src="${sitioUrl}/marca/logo-correo.png" width="120" height="120" alt="Punto y Aparte" style="display:block;border:0"></a></td>`,
+      `<td style="vertical-align:middle;font-size:14px;color:#5a5552">`,
+      `<strong style="color:#1e1c1c">Punto y Aparte</strong><br>`,
+      `<a href="mailto:${responderA}" style="color:#f94441;text-decoration:none">${responderA}</a><br>`,
+      `<a href="${sitioUrl}" style="color:#f94441;text-decoration:none">punto-y-aparte.com</a>`,
+      `</td></tr></table>`,
+      `</div>`,
+    ].join(""),
   };
 }
 
