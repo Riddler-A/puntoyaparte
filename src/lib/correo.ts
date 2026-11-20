@@ -79,7 +79,7 @@ export function correoInvitado(nombre: string, invitaPor: string, para: string):
       sitioUrl,
     ].join("\n"),
     html: [
-      `<div style="font-family:Arial,Helvetica,sans-serif;color:#1e1c1c;font-size:16px;line-height:1.5;max-width:560px">`,
+      `<div lang="es" style="font-family:Arial,Helvetica,sans-serif;color:#1e1c1c;font-size:16px;line-height:1.5;max-width:560px">`,
       `<p>Hola ${escapar(nombre)},</p>`,
       `<p>${escapar(invitaPor)} te invita a Punto y Aparte ${edicion.anio}: ${escapar(edicion.fechasLargas)}, ${escapar(edicion.ciudad)}.</p>`,
       `<p>Punto y Aparte reúne a dueños y directivos para conversar sobre empresas que prosperan y también dejan algo valioso a su paso.</p>`,
