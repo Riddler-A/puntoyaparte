@@ -21,6 +21,20 @@ export const metadata: Metadata = {
   },
   description:
     "Una pausa para pensar qué empresa vas a heredar. Encuentros para dueños y directivos de empresa en Guadalajara.",
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "Punto y Aparte",
+    url: sitioUrl,
+    title: "Punto y Aparte · Conversaciones sobre empresa, prosperidad y humanidad",
+    description:
+      "Una pausa para pensar qué empresa vas a heredar. Encuentros para dueños y directivos de empresa en Guadalajara.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Punto y Aparte",
+    description: "Una pausa para pensar qué empresa vas a heredar.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
