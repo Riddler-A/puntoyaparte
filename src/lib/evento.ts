@@ -28,8 +28,8 @@ export const enlaceCalendario = `https://calendar.google.com/calendar/render?${n
 export const contacto = {
   nombre: "Víctor Hernández",
   cargo: "Comercialización",
-  telefono: "33 1738 0678",
-  whatsapp: "https://wa.me/523317380678",
+  telefono: "33 1109 0313",
+  whatsapp: "https://wa.me/5213311090313",
   email: "contacto@punto-y-aparte.com",
   instagram: "https://www.instagram.com/____puntoyaparte",
   instagramUsuario: "@____puntoyaparte",
